@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "chatfilter",
+	"version": "${version}",
+	"name": "ChatFilter",
+	"description": "This is mod prevent spam messages from chat in servers!",
+	"authors": [
+		"ThunderYT | CodeNex"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "GPL3",
+	"icon": "assets/chatfilter/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.thunder.chatfilter.ChatFilter"
+		],
+		"client": [
+			"net.thunder.chatfilter.ChatFilterClient"
+		]
+	},
+	"mixins": [
+		"chatfilter.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
