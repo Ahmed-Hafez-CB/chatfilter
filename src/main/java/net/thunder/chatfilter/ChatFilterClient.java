@@ -4,23 +4,32 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import net.thunder.chatfilter.command.ChatFilterCommand;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatFilterClient implements ClientModInitializer {
 
     private static boolean filterEnabled = true;
 
-    private static final Set<String> FILTER_PREFIXES = Set.of(
+    public static List<String> FILTER_PREFIXES = new ArrayList<>(List.of(
             "[broadcast]",
-            "[crates]"
-    );
+            "[crates]",
+            "vote",
+            ">> info"
+    ));
 
     private static KeyBinding TOGGLE_KEY;
+
+    private static String stripFormatting(String text) {
+        return text.replaceAll("§.", "");
+    }
 
     @Override
     public void onInitializeClient() {
@@ -45,7 +54,7 @@ public class ChatFilterClient implements ClientModInitializer {
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (!filterEnabled) return true;
 
-            String plain = message.getString().toLowerCase();
+            String plain = stripFormatting(message.getString()).toLowerCase();
 
             for (String prefix : FILTER_PREFIXES) {
                 if (plain.startsWith(prefix)) {
@@ -55,5 +64,7 @@ public class ChatFilterClient implements ClientModInitializer {
 
             return true; // Allow message
         });
+
+        ClientCommandRegistrationCallback.EVENT.register(ChatFilterCommand::register);
     }
 }
